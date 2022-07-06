@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "advancementprinter",
+  "version": "${version}",
+  "name": "AdvancementPrinter",
+  "description": "A mod that prints all the advancements you got in a single minecraft session. Made for personal use to use in the blaze and caves datapack.",
+  "authors": [
+    "jsaper"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/AdvancementPrinter/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "jsaper.advancementprinter.AdvancementPrinter"
+    ]
+  },
+  "mixins": [
+    "AdvancementPrinter.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.8",
+    "fabric": "*",
+    "minecraft": "1.19"
+  }
+}
