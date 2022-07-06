@@ -37,6 +37,7 @@ public class IntegratedServerLoaderMixin {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            AdvancementPrinter.FILE_DIR = file;
         }
 
     }
