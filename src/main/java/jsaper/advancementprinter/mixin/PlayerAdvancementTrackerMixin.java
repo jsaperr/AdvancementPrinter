@@ -26,7 +26,7 @@ public class PlayerAdvancementTrackerMixin {
     private void grantCriterion(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) throws IOException {
         LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        FileUtils.writeStringToFile(AdvancementPrinter.FILE_DIR, "\n" + dateTime.format(formatter)+": "+advancement + "\n", StandardCharsets.UTF_8, true);
+        FileUtils.writeStringToFile(AdvancementPrinter.FILE_DIR, "\n" + dateTime.format(formatter)+": "+advancement.getDisplay().getTitle().getString() + "\n", StandardCharsets.UTF_8, true);
 
     }
 }

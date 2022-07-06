@@ -9,6 +9,7 @@ import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.world.SaveProperties;
 import net.minecraft.world.level.storage.LevelStorage;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -59,6 +60,8 @@ public class IntegratedServerLoaderMixin {
                 e.printStackTrace();
             }
             AdvancementPrinter.FILE_DIR = file;
+        } else {
+            AdvancementPrinter.LOGGER.log(Level.INFO,AdvancementPrinter.MOD_ID + ": File already exists.");
         }
 
     }
