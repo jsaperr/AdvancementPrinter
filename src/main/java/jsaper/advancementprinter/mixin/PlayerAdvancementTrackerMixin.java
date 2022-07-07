@@ -22,20 +22,18 @@ import java.time.format.DateTimeFormatter;
 
 @Mixin(PlayerAdvancementTracker.class)
 public abstract class PlayerAdvancementTrackerMixin {
-
     @Shadow public abstract AdvancementProgress getProgress(Advancement advancement);
 
     @Inject(at = @At("TAIL"), method = "grantCriterion")
     private void grantCriterion(Advancement advancement, String criterionName, CallbackInfoReturnable<Boolean> cir) throws IOException {
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        AdvancementProgress progress = this.getProgress(advancement);
+        boolean done = progress.isDone();
 
-        AdvancementProgress advancementProgress = this.getProgress(advancement);
-        boolean bl2 = advancementProgress.isDone();
-
-        if (bl2 && advancement.getDisplay() != null) {
+        if (done && advancement.getDisplay() != null) {
+            LocalDateTime dateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            
             FileUtils.writeStringToFile(AdvancementPrinter.FILE_DIR, "\n" + dateTime.format(formatter)+": "+advancement.getDisplay().getTitle().getString() + "\n", StandardCharsets.UTF_8, true);
         }
-
     }
 }
