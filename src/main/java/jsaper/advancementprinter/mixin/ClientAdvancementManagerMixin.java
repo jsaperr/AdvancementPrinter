@@ -30,20 +30,15 @@ public class ClientAdvancementManagerMixin {
 
     @Inject(at = @At("RETURN"), method = "onAdvancements")
     public void onComplete(AdvancementUpdateS2CPacket packet, CallbackInfo ci) throws IOException {
-
         LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-
 
         Map<Identifier, Advancement.Builder> advancementsToEarn = packet.getAdvancementsToEarn();
         for (Map.Entry<Identifier, Advancement.Builder> advancementEntry: advancementsToEarn.entrySet()) {
             Advancement advancement = advancementEntry.getValue().build(advancementEntry.getKey());
-
             String advancementName = advancement.getDisplay().getTitle().getString();
 
             FileUtils.writeStringToFile(AdvancementPrinter.FILE_DIR, "\n" + dateTime.format(formatter)+": "+ advancementName + "\n", StandardCharsets.UTF_8, true);
-
-
         }
     }
 }
