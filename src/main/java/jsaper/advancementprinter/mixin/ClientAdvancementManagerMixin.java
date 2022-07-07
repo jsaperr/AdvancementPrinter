@@ -5,7 +5,9 @@ import jsaper.advancementprinter.AdvancementPrinter;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementDisplay;
 import net.minecraft.advancement.AdvancementManager;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientAdvancementManager;
+import net.minecraft.client.toast.AdvancementToast;
 import net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
@@ -24,9 +26,10 @@ import java.util.Map;
 
 @Mixin(ClientAdvancementManager.class)
 public class ClientAdvancementManagerMixin {
+    @Shadow @Final private MinecraftClient client;
+
     @Inject(at = @At("RETURN"), method = "onAdvancements")
     public void onComplete(AdvancementUpdateS2CPacket packet, CallbackInfo ci) throws IOException {
-
 
         LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");

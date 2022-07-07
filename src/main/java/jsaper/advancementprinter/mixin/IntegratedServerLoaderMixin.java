@@ -39,6 +39,8 @@ public class IntegratedServerLoaderMixin {
                 e.printStackTrace();
             }
             AdvancementPrinter.FILE_DIR = file;
+        } else {
+            AdvancementPrinter.LOGGER.log(Level.INFO, "File already exists.");
         }
 
     }
