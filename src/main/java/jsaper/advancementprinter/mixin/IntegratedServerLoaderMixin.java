@@ -22,50 +22,41 @@ import java.nio.file.Path;
 
 @Mixin(IntegratedServerLoader.class)
 public class IntegratedServerLoaderMixin {
-
-    @Inject(at = @At("HEAD"), method = "start(Lnet/minecraft/world/level/storage/LevelStorage$Session;Lnet/minecraft/server/DataPackContents;Lnet/minecraft/util/registry/DynamicRegistryManager$Immutable;Lnet/minecraft/world/SaveProperties;)V")
-    public void onCreate(LevelStorage.Session session, DataPackContents dataPackContents, DynamicRegistryManager.Immutable dynamicRegistryManager, SaveProperties saveProperties, CallbackInfo ci) {
-        Path worldPath = MinecraftClient.getInstance().getLevelStorage().getSavesDirectory().resolve(session.getDirectoryName());
-        File worldDirectory = worldPath.toFile();
-        if (worldDirectory.exists()) {
-            worldDirectory.mkdirs();
-        }
-
-        File file = new File(worldDirectory, "advancement_tracker.txt");
-        if (!file.exists()) {
-            try {
-                FileUtils.writeStringToFile(new File(worldDirectory, "advancement_tracker.txt"), "Advancement Tracker", StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            AdvancementPrinter.FILE_DIR = file;
-        } else {
-            AdvancementPrinter.LOGGER.log(Level.INFO, "File already exists.");
-        }
-
-    }
-
-    @Inject(at = @At("HEAD"), method = "start(Lnet/minecraft/client/gui/screen/Screen;Ljava/lang/String;)V")
-    public void onWorldOpen(Screen parent, String levelName, CallbackInfo ci) {
-
+    private void createDirs() {
         Path worldPath = MinecraftClient.getInstance().getLevelStorage().getSavesDirectory().resolve(levelName);
         File worldDirectory = worldPath.toFile();
-        if (worldDirectory.exists()) {
-            worldDirectory.mkdirs();
-        }
-
+        if (worldDirectory.exists()) { worldDirectory.mkdirs(); }
+    }
+    
+    private void createFile() {
         File file = new File(worldDirectory, "advancement_tracker.txt");
         if (!file.exists()) {
-            try {
-                FileUtils.writeStringToFile(new File(worldDirectory, "advancement_tracker.txt"), "Advancement Tracker", StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            try { FileUtils.writeStringToFile(new File(worldDirectory, "advancement_tracker.txt"), "Advancement Tracker", StandardCharsets.UTF_8); }
+            catch (IOException e) { e.printStackTrace(); }
+            
             AdvancementPrinter.FILE_DIR = file;
-        } else {
-            AdvancementPrinter.LOGGER.log(Level.INFO,AdvancementPrinter.MOD_ID + ": File already exists.");
         }
-
+        else { AdvancementPrinter.LOGGER.log(Level.INFO, "File already exists."); }
+    }
+    
+    private void create() {
+        this.createDirs();
+        this.createFile();
+    }
+    
+    @Inject(
+        at = @At("HEAD"),
+        method = "start(Lnet/minecraft/world/level/storage/LevelStorage$Session;Lnet/minecraft/server/DataPackContents;Lnet/minecraft/util/registry/DynamicRegistryManager$Immutable;Lnet/minecraft/world/SaveProperties;)V"
+    )
+    public void onCreate(LevelStorage.Session session, DataPackContents dataPackContents, DynamicRegistryManager.Immutable dynamicRegistryManager, SaveProperties saveProperties, CallbackInfo ci) {
+        this.create();
     }
 
+    @Inject(
+        at = @At("HEAD"),
+        method = "start(Lnet/minecraft/client/gui/screen/Screen;Ljava/lang/String;)V"
+    )
+    public void onWorldOpen(Screen parent, String levelName, CallbackInfo ci) {
+        this.create();
     }
+}
